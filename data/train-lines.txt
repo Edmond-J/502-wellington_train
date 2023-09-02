@@ -1,0 +1,10 @@
+Johnsonville_Wellington 27 650
+Wellington_Johnsonville 0 0
+Melling_Wellington 402 671
+Wellington_Melling 0 0
+Waikanae_Wellington 194 443
+Wellington_Waikanae 0 0
+Masterton_Wellington 484 27
+Wellington_Masterton 0 0
+Upper-Hutt_Wellington 374 390
+Wellington_Upper-Hutt 0 0
