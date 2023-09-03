@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 import ecs100.UI;
 
 public class Option {
@@ -48,8 +50,8 @@ public class Option {
 				trainID, depSt.getName(), time1, time2, zoneGo, price, stops, arrSt.getName());
 		if (next != null) {
 			int nextMinute = (next.depTime/100)*60+(next.depTime%100);
-			int arriveMinute = (arrTime/100)*60+(arrTime%100);
-			UI.printf("  🔄Transfer Time: %d min\n", nextMinute-arriveMinute);
+			int arrMinute = (arrTime/100)*60+(arrTime%100);
+			UI.printf("  🔄Transfer Duration: %d min\n", nextMinute-arrMinute);
 			next.printInfo(priority);
 			if (priority.equals("arrival")) {
 				String time = (next.getArrTime()/100)+":"+String.format("%02d", (next.getArrTime()%100));
@@ -58,6 +60,44 @@ public class Option {
 				UI.printf("Total Distance(km): %.2f", getDistance());
 			} else if (priority.equals("price")) {
 				UI.printf("Total Price: %.2f\n", getPrice());
+			}
+		}
+	}
+
+	public void drawInfo(String priority, int i) {
+//		int i = 1+((next == null) ? 1 : 0);
+		String time1 = (depTime/100)+":"+String.format("%02d", (depTime%100));
+		String time2 = (arrTime/100)+":"+String.format("%02d", (arrTime%100));
+		int depMinute = (depTime/100)*60+(depTime%100);
+		int arrMinute = (arrTime/100)*60+(arrTime%100);
+		UI.setFontSize(24);
+		UI.setColor(new Color(54, 116, 157));
+		UI.drawString(depSt.getName(), 800, 240*i-120);
+		UI.drawString(arrSt.getName(), 1100, 240*i-120);
+		UI.drawLine(960, 240*i-120, 1080, 240*i-120);
+		UI.drawLine(1080, 240*i-120, 1070, 240*i-130);
+		UI.setFontSize(16);
+		UI.drawString((arrMinute-depMinute)+" min", 1000, 240*i-125);
+		UI.drawString(trainID, 820, 240*i-90);
+		UI.drawString("departure time: "+time1, 820, 240*i-60);
+		UI.drawString("arrival time: "+time2, 820, 240*i-30);
+		UI.drawString("zone travelled: "+zoneGo, 820, 240*i);
+		UI.drawString("price: $ "+price, 820, 240*i+30);
+		UI.drawString("stops: "+stops, 820, 240*i+60);
+		UI.drawLine(805, 240*i-100, 805, 240*i+60);
+		if (next != null) {
+			UI.drawImage("img/transfer.png", arrSt.getX()-25, arrSt.getY()-10, 30, 30);
+			next.drawInfo(priority, i+1);
+			int nextMinute = (next.depTime/100)*60+(next.depTime%100);
+			UI.setColor(new Color(240, 134, 80));
+			UI.drawString("Transfer Duration: "+(nextMinute-arrMinute)+"min", 820, 240*i+90);
+			if (priority.equals("arrival")) {
+				String time = (next.getArrTime()/100)+":"+String.format("%02d", (next.getArrTime()%100));
+				UI.drawString("Arrival Time: "+time, 820, 570);
+			} else if (priority.equals("stops")) {
+				UI.drawString("Total Stops: "+getStops(), 820, 570);
+			} else if (priority.equals("price")) {
+				UI.drawString("Total Price: "+getPrice()+" $", 820, 570);
 			}
 		}
 	}
@@ -96,12 +136,15 @@ public class Option {
 
 	public double getPrice() {
 		if (next != null) {
-			return price+next.price;
+			return price+next.getPrice();
 		}
 		return price;
 	}
 
 	public int getStops() {
+		if (next != null) {
+			return stops+next.getStops();
+		}
 		return stops;
 	}
 

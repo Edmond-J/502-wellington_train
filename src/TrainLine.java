@@ -3,6 +3,7 @@
 // You may not distribute it in any other way without permission.
 // Code for SWEN502, Assignment W2
 
+import java.awt.Color;
 import java.util.*;
 
 import ecs100.UI;
@@ -22,11 +23,11 @@ import ecs100.UI;
  *   (in order of time - services earlier in the list are always earlier times (at any station) than later services  )
  */
 public class TrainLine {
-	double x;
-	double y;
-	String lName;
-	ArrayList<Station> stations = new ArrayList<>();           // list of stations on the line
-	ArrayList<TrainService> trainServices = new ArrayList<>(); // set of TrainServices running on the line
+	private double x;
+	private double y;
+	private String lName;
+	private ArrayList<Station> stations = new ArrayList<>();           // list of stations on the line
+	private ArrayList<TrainService> trainServices = new ArrayList<>(); // set of TrainServices running on the line
 
 	// Constructor
 	public TrainLine(String name) {
@@ -43,6 +44,7 @@ public class TrainLine {
 
 	public void printInfo() {
 		UI.setFontSize(24);
+		UI.setColor(new Color(54, 116, 157));
 		UI.drawString("Line Name: "+lName, 800, 120);
 		UI.setFontSize(16);
 		UI.drawString("Total Stations: "+stations.size(), 800, 150);
@@ -62,7 +64,7 @@ public class TrainLine {
 //	}
 
 	public void highLight() {
-		UI.drawImage("img/arrow (8).png", x-20, y, 30, 30);
+		UI.drawImage("img/arrow (2).png", x-20, y, 30, 30);
 	}
 
 	public boolean insideOf(double x2, double y2) {

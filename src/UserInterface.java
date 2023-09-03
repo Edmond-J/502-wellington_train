@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -13,33 +15,46 @@ public class UserInterface {
 	HashMap<Integer, Double> fareMap = new HashMap<>();
 	Station s1;
 	Station s2;
-	int myTime = 835;
-	String priority = "";
-	String function="enquiry";
+	int myTime = 900;
+	String priority = "arrival";
+	String function = "enquiry";
 
 	public UserInterface() {
 		loadData();
 		refresh();
 		selectOne();
-//		UI.addButton("Check Information", this::selectOne);
-//		UI.addButton("Plan Travel", this::selectTwo);
-//		travelDirectly();
-//		findRoute(s1, s2);
 	}
+
+//	private int getSystemTime() {
+//		LocalTime sysTime = LocalTime.now();
+//		int sysTimeInt = Integer.parseInt(sysTime.format(DateTimeFormatter.ofPattern("HHmm")));
+//		return sysTimeInt;
+//	}
 
 	private void refresh() {
 		UI.clearText();
 		UI.clearGraphics();
-		UI.drawImage("img/map.png", 0, 0);
 		UI.setLineWidth(1);
-		UI.drawRect(0, 0, 1280, 1080);
+		UI.setColor(new Color(217, 217, 217));
+		UI.fillRect(0, 0, 1280, 1080);
+		UI.drawImage("img/map.png", 0, 0);
 		refreshButton();
 		refreashFunction();
+		// 获取当前系统时间
+		LocalTime sysTime = LocalTime.now();
+		String sysTimeString = sysTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+		String myTimeString = (myTime/100)+":"+String.format("%02d", (myTime%100));
+//		String shwoTime = sysTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+		UI.setFontSize(20);
+		UI.drawString("Time: "+sysTimeString, 1150, 50);
+		if (myTime != 0)
+			UI.drawString(myTimeString, 285, 240);
+		UI.setColor(Color.black);
+		UI.drawRect(0, 0, 1280, 1080);
 	}
 
 	private void refreshButton() {
-		UI.setLineWidth(2);
-		UI.setColor(Color.white);
+		UI.setColor(new Color(217, 217, 217));
 		UI.fillRect(800, 25, 225, 30);
 		if (priority != "") {
 			UI.setColor(Color.black);
@@ -50,15 +65,15 @@ public class UserInterface {
 			UI.setColor(new Color(54, 116, 157));
 			if (priority.equals("arrival")) {
 				UI.fillRect(800, 25, 75, 30);
-				UI.setColor(Color.white);
-				UI.drawString("Earlist", 820, 45);
-			} else if (priority.equals("distance")) {
+				UI.setColor(new Color(217, 217, 217));
+				UI.drawString("Earliest", 820, 45);
+			} else if (priority.equals("stops")) {
 				UI.fillRect(875, 25, 75, 30);
-				UI.setColor(Color.white);
-				UI.drawString("Shortest", 820, 45);
+				UI.setColor(new Color(217, 217, 217));
+				UI.drawString("Least", 985, 45);
 			} else if (priority.equals("price")) {
 				UI.fillRect(950, 25, 75, 30);
-				UI.setColor(Color.white);
+				UI.setColor(new Color(217, 217, 217));
 				UI.drawString("Cheapest", 960, 45);
 			}
 		}
@@ -67,23 +82,27 @@ public class UserInterface {
 		UI.drawRect(800, 25, 75, 30);
 		UI.drawRect(875, 25, 75, 30);
 		UI.drawRect(950, 25, 75, 30);
-		UI.drawString("Earlist", 820, 45);
-		UI.drawString("Shortest", 890, 45);
+		UI.drawString("Earliest", 820, 45);
+		UI.drawString("Least", 895, 45);
 		UI.drawString("Cheapest", 960, 45);
 		UI.drawImage("img/enquiry.png", 90, 145, 65, 65);
 		UI.drawImage("img/travel.png", 180, 145, 65, 65);
+		UI.drawImage("img/alarm.png", 270, 140, 75, 75);
 	}
-	
-	private void refreashFunction(){
+
+	private void refreashFunction() {
 		UI.setColor(Color.white);
 		UI.fillRect(90, 145, 160, 70);
 		UI.setColor(new Color(54, 116, 157));
-		if(function.equals("enquiry"))
+		if (function.equals("enquiry"))
 			UI.fillOval(90, 145, 65, 65);
-		if(function.equals("travel"))
+		if (function.equals("travel"))
 			UI.fillOval(180, 145, 65, 65);
+		if (myTime != 0)
+			UI.fillOval(280, 160, 50, 50);
 		UI.drawImage("img/enquiry.png", 90, 145, 65, 65);
 		UI.drawImage("img/travel.png", 180, 145, 65, 65);
+		UI.drawImage("img/alarm.png", 270, 140, 75, 75);
 	}
 	// public void smokeTest() {
 	// System.out.println(statMap.get("Ngaio").trainLines.size());
@@ -95,19 +114,22 @@ public class UserInterface {
 
 	private void checkButton(double x, double y) {
 		if (x > 90 && x < 155 && y > 145 && y < 210) {
-			//checkInfo();
-			function="enquiry";
+			// checkInfo();
+			function = "enquiry";
 			refreashFunction();
 			selectOne();
 		} else if (x > 180 && x < 245 && y > 145 && y < 210) {
-			function="travel";
+			function = "travel";
 			refreashFunction();
 			selectTwo();
+		} else if (x > 270 && x < 345 && y > 140 && y < 215) {
+			myTime = UI.askInt("your set off time?(hhmm)");
+			refresh();
 		} else if (x > 800 && x < 875 && y > 25 && y < 55) {
 			priority = "arrival";
 			refreshButton();
 		} else if (x > 875 && x < 950 && y > 25 && y < 55) {
-			priority = "distance";
+			priority = "stops";
 			refreshButton();
 		} else if (x > 950 && x < 1025 && y > 25 && y < 55) {
 			priority = "price";
@@ -115,7 +137,7 @@ public class UserInterface {
 		} else if (x > 1040 && x < 1055 && y > 32 && y < 47) {
 			priority = "";
 			refreshButton();
-			UI.setColor(Color.white);
+			UI.setColor(new Color(217, 217, 217));
 			UI.fillRect(1040, 32, 16, 16);
 		}
 	}
@@ -176,6 +198,7 @@ public class UserInterface {
 			UI.println("Error: "+e);
 		}
 	}
+
 	public void selectOne() {
 		refresh();
 		UI.setMouseListener(this::checkInfo);
@@ -185,40 +208,19 @@ public class UserInterface {
 		if (action.equals("clicked")) {
 			UI.println(x+" "+y);
 			checkButton(x, y);
-			String find = null;
 			for (Station s : statMap.values()) {
 				if (s.insideOf(x, y)) {
 					refresh();
-					s.highLight("img/arrow (1).png");
-					find = s.getName();
+					s.highLight("img/arrow (2).png");
+					s.printInfo();
 				}
 			}
-//			for (Entry<String, Station> e : statMap.entrySet()) {
-//				if (e.getValue().insideOf(x, y)) {
-//					refresh();
-//					e.getValue().highLight("img/arrow (1).png");
-//					find = e.getKey();
-//				}
-//			}
 			for (TrainLine t : lineMap.values()) {
 				if (t.insideOf(x, y)) {
 					refresh();
 					t.highLight();
-					find = t.getName();
+					t.printInfo();
 				}
-			}
-//			for (Entry<String, TrainLine> e : lineMap.entrySet()) {
-//				if (e.getValue().insideOf(x, y)) {
-//					refresh();
-//					e.getValue().highLight();
-//					find = e.getKey();
-//				}
-//			}
-			if (statMap.containsKey(find)) {
-				statMap.get(find).printInfo();
-			}
-			if (lineMap.containsKey(find)) {
-				lineMap.get(find).printInfo();
 			}
 		}
 	}
@@ -231,22 +233,22 @@ public class UserInterface {
 	public void planTravel(String action, double x, double y) {
 		if (action.equals("clicked")) {
 			checkButton(x, y);
-			String find = null;
+			Station find = null;
 			for (Station s : statMap.values()) {
 				if (s.insideOf(x, y)) {
 					if (s1 == null && s2 == null) {
 						refresh();
-						s.highLight("img/arrow (1).png");
-					} else s.highLight("img/arrow (5).png");
-					find = s.getName();
+						s.highLight("img/go.png");
+					} else s.highLight("img/stop.png");
+					find = s;
 				}
 			}
-			if (statMap.containsKey(find) && s1 == null) {
-				s1 = statMap.get(find);
+			if (statMap.containsValue(find) && s1 == null) {
+				s1 = find;
 				return;
 			}
-			if (statMap.containsKey(find) && s1 != null && s2 == null) {
-				s2 = statMap.get(find);
+			if (statMap.containsValue(find) && s1 != null && s2 == null) {
+				s2 = find;
 				findRoute(s1, s2);
 				s1 = null;
 				s2 = null;
@@ -259,7 +261,7 @@ public class UserInterface {
 		int indexTo = tl.getStations().indexOf(s2);
 		if (indexFrom < indexTo) {// 保证方向正确
 			for (TrainService ts : tl.getTrainServices()) {
-				if (ts.getTimes().get(indexFrom) > myTime) {// 保证时间来得及
+				if (ts.getTimes().get(indexFrom) > myTime && ts.getTimes().get(indexTo) > 0) {// 保证时间来得及&&该站停靠
 					int departTime = ts.getTimes().get(indexFrom);
 					int arriveTime = ts.getTimes().get(indexTo);
 					int zoneGo = Math.abs(s1.getZone()-s2.getZone())+1;
@@ -312,6 +314,9 @@ public class UserInterface {
 		ArrayList<Option> optList = new ArrayList<>();
 		UI.printf("no direct route between %s and %s\n", s1.getName(), s2.getName());
 		UI.println("transfer route:");
+		UI.setColor(Color.white);
+		UI.setFontSize(18);
+		UI.drawString("No direct train between "+s1.getName()+" and "+s2.getName(), 800, 1060);
 		for (TrainLine tls1 : s1.getTrainLines()) {
 			for (Station st : tls1.getStations()) {// 寻找换乘点
 				int indexFrom = tls1.getStations().indexOf(s1);
@@ -339,14 +344,23 @@ public class UserInterface {
 							// st是换乘点，tls2是换乘线路
 							Option op1 = travelDirectly(s1, st, tls1, myTime);// optList=会被覆盖，必须用addAll
 							// 再次找到第二段的选择的时候，第一段也会被重复加入
-							Option op2 = travelDirectly(st, s2, tls2, op1.getArrTime());
-							// 发生了交叉相乘
-							Option comOpt = new Option(op1, op2);
-							optList.add(comOpt);
+							if (op1 != null) {
+								Option op2 = travelDirectly(st, s2, tls2, op1.getArrTime());
+								// 发生了交叉相乘
+								if (op2 != null) {
+									Option comOpt = new Option(op1, op2);
+									optList.add(comOpt);
+								}
+							}
 						}
 					}
 				}
 			}
+		}
+		if (optList.size() == 0) {
+			UI.setColor(Color.white);
+			UI.setFontSize(18);
+			UI.drawString("No train found at this time", 800, 200);
 		}
 		optionPrint(optList);
 	}
@@ -354,14 +368,15 @@ public class UserInterface {
 	public void optionPrint(ArrayList<Option> optList) {
 		if (priority.equals("arrival")) {
 			optList.sort(new ComparatorArrival());
-		} else if (priority.equals("distance")) {
-			optList.sort(new ComparatorDistance());
+		} else if (priority.equals("stops")) {
+			optList.sort(new ComparatorStops());
 		} else if (priority.equals("price")) {
 			optList.sort(new ComparatorPrice());
 		}
 		for (int i = 0; i < optList.size(); i++) {
 			UI.printf("\n-------------Option %d------------\n", i+1);
 			optList.get(i).printInfo(priority);
+			optList.get(0).drawInfo(priority, 1);
 		}
 	}
 

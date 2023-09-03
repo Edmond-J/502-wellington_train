@@ -19,10 +19,10 @@ import java.util.*;
  * The getStart() method will return the first real time in the list of times
  */
 public class TrainService {
-	TrainLine trainLine;
-	String lineName;
-	String trainID;    // train line name + starting time of the train
-	ArrayList<Integer> timeTable = new ArrayList<>();
+	private TrainLine trainLine;
+	private String lineName;
+	private String trainID;    // train line name + starting time of the train
+	private ArrayList<Integer> timeTable = new ArrayList<>();
 
 	/**
 	 * Make a new TrainService on a particular train line.

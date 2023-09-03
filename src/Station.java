@@ -3,6 +3,7 @@
 // You may not distribute it in any other way without permission.
 // Code for SWEN502, Assignment W2
 
+import java.awt.Color;
 import java.util.*;
 
 import ecs100.UI;
@@ -18,11 +19,11 @@ import ecs100.UI;
  * TrainLines must then be added to the station, one by one.
  */
 public class Station {
-	String sName;
-	int zone;          // fare zone
-	double distance;   // distance from Wellington
-	double x;          // coordinate in the map
-	double y;
+	private String sName;
+	private int zone;          // fare zone
+	private double distance;   // distance from Wellington
+	private double x;          // coordinate in the map
+	private double y;
 	HashSet<TrainLine> trainLines = new HashSet<>();
 
 	public Station(String name, int zone, double dist, double x, double y) {
@@ -51,13 +52,20 @@ public class Station {
 	public Set<TrainLine> getTrainLines() {
 		return Collections.unmodifiableSet(trainLines); // Return an unmodifiable version of the set of train lines.
 	}
+	
+	public double getX() {
+		return this.x;
+	}
+	public double getY() {
+		return this.y;
+	}
 
 	public int getZone() {
 		return this.zone;
 	}
 
 	public void highLight(String icon) {
-		UI.drawImage(icon, x-32, y-8, 30, 30);
+		UI.drawImage(icon, x-32, y-8, 25, 25);
 	}
 
 	public boolean insideOf(double x2, double y2) {
@@ -76,6 +84,7 @@ public class Station {
 //	}
 	public void printInfo() {
 		UI.setFontSize(24);
+		UI.setColor(new Color(54, 116, 157));
 		UI.drawString(sName, 800, 120);
 		UI.setFontSize(16);
 		UI.drawString("Fare Zone: "+zone, 800, 150);
