@@ -20,7 +20,6 @@ import java.util.*;
  */
 public class TrainService {
 	private TrainLine trainLine;
-	private String lineName;
 	private String trainID;    // train line name + starting time of the train
 	private ArrayList<Integer> timeTable = new ArrayList<>();
 
@@ -31,8 +30,7 @@ public class TrainService {
 		trainLine = line;
 	}
 
-	public TrainService(String name, String id, ArrayList<Integer> time) {
-		lineName = name;
+	public TrainService( String id, ArrayList<Integer> time) {
 		trainID = id;
 		timeTable = time;
 	}

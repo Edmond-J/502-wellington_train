@@ -7,8 +7,8 @@ public class Option {
 //	private TrainService timetable;
 	private String trainID;
 	private TrainLine line;
-	public Station depSt;
-	public Station arrSt;
+	private Station depSt;
+	private Station arrSt;
 	private int depTime;
 	private int arrTime;
 	private int stops;
@@ -154,45 +154,5 @@ public class Option {
 
 	public int getZoneGo() {
 		return zoneGo;
-	}
-
-	public void setArrSt(Station arrSt) {
-		this.arrSt = arrSt;
-	}
-
-	public void setArrTime(int arrTime) {
-		this.arrTime = arrTime;
-	}
-
-	public void setDepSt(Station depSt) {
-		this.depSt = depSt;
-	}
-
-	public void setDepTime(int depTime) {
-		this.depTime = depTime;
-	}
-
-	public void setLine(TrainLine line) {
-		this.line = line;
-	}
-//	public void setNext(Option n) {
-//		if (next == null)
-//			next = n;
-//	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	public void setStops(int stops) {
-		this.stops = stops;
-	}
-
-	public void setTrainID(String trainID) {
-		this.trainID = trainID;
-	}
-
-	public void setZoneGo(int zoneGo) {
-		this.zoneGo = zoneGo;
 	}
 }
